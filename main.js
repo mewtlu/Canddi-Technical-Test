@@ -21,7 +21,10 @@ function getAndStoreData (userData, body, link) {
 							userData['emails'].push(data[k]['address']);
 						}
 					} else {
-						userData[plugin].push(data[k]);
+						if (userData[plugin].indexOf(data[k]) === -1) {
+							userData[plugin].push(data[k]);
+						}
+						//userData[plugin].push(data[k]);
 					}
 				}
 			} else {
@@ -31,7 +34,28 @@ function getAndStoreData (userData, body, link) {
 			userData.toStore -= 1;
 
 			if (userData.toStore === 0) {
-				console.log('Finished scraping ' + userData.site + '! Results:\n\n', userData, '\n\n');
+				console.log('Finished scraping ' + userData.site + '! Results:\n\n');
+				
+
+				var resultsOutStr = 'Emails:\n';
+				for (e in userData['emails']) {
+					resultsOutStr += '\t' + userData['emails'][e] + '\n';
+				}
+				resultsOutStr += 'Phones:\n';
+				for (e in userData['betterPhones']) {
+					resultsOutStr += '\t' + userData['betterPhones'][e] + '\n';
+				}
+				resultsOutStr += 'Links:\n';
+				for (e in userData['links']) {
+					resultsOutStr += '\t' + userData['links'][e] + '\n';
+				}
+				resultsOutStr += 'Places:\n';
+				for (e in userData['places']) {
+					resultsOutStr += '\t' + userData['places'][e] + '\n';
+				}
+
+				console.log(resultsOutStr);
+
 			}
 		}
 	} else {
