@@ -10,7 +10,7 @@ function getAndStoreData (userData, body, link) {
 		knwlInst.init(body);
 
 		//var knwlPlugins = ['betterPhones', 'emails', 'places'];
-		var knwlPlugins = ['betterPhones', 'emails'];
+		var knwlPlugins = ['betterPhones', 'emails', 'addresses'];
 		for (p in knwlPlugins) {
 			var plugin = knwlPlugins[p];
 			var data = knwlInst.get(plugin);
@@ -65,6 +65,10 @@ function getAndStoreData (userData, body, link) {
 				resultsOutStr += 'Socials:\n';
 				for (var s in userData.socials) {
 					resultsOutStr += '\t' + userData.socials[s] + '\n';
+				}
+				resultsOutStr += 'Addresses:\n';
+				for (var a in userData.addresses) {
+					resultsOutStr += '\t' + userData.addresses[a] + '\n';
 				}
 
 				/* Final output of str */
@@ -185,6 +189,7 @@ const knwlInst = new Knwl('english');
 const cheerio = require('cheerio');
 
 knwlInst.register('betterPhones', require('./lib/knwlPhones.js'));
+knwlInst.register('addresses', require('./lib/knwlAddresses.js'));
 
 var args = process.argv;
 var userData = {
@@ -192,7 +197,7 @@ var userData = {
 	pricingPlans: [],
 	links: [],
 	emails: [],
-	places: [],
+	addresses: [],
 	betterPhones: [],
 	socials: []
 };
