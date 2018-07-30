@@ -9,7 +9,7 @@ function getAndStoreData (userData, body, link) {
 		/* if we already have the page body */
 		knwlInst.init(body);
 
-		var knwlPlugins = ['phones', 'emails', 'links', 'places'];
+		var knwlPlugins = ['betterPhones', 'emails', 'links', 'places'];
 		for (p in knwlPlugins) {
 			var plugin = knwlPlugins[p];
 			var data = knwlInst.get(plugin);
@@ -130,6 +130,8 @@ const request = require('request');
 const Knwl = require('knwl.js');
 const knwlInst = new Knwl('english');
 const cheerio = require('cheerio');
+
+knwlInst.register('betterPhones', require('./lib/knwlPhones.js'));
 
 var args = process.argv;
 var userData = {
