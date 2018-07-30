@@ -1,3 +1,9 @@
+/*
+ * function getAndStoreData - should take either a page body as string or a link, which will then be read and scraped for a few different pieces of data
+ * @param <object> userData - Object containing user info
+ * @param <string/undefined> body - Body of HTML page or undefined
+ * @param <string/undefined> link - Link to HTML page or undefined
+ */
 function getAndStoreData (userData, body, link) {
 	userData.toStore += 1;
 	if (body && body.length > 0) {
