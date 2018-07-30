@@ -5,7 +5,6 @@
  * @param <string/undefined> link - Link to HTML page or undefined
  */
 function getAndStoreData (userData, body, link) {
-	userData.toStore += 1;
 	if (body && body.length > 0) {
 		/* if we already have the page body */
 		knwlInst.init(body);
@@ -17,19 +16,22 @@ function getAndStoreData (userData, body, link) {
 
 			if (userData[plugin]) {
 				for (k in data) {
-					if (userData[plugin].indexOf(data[k]) === -1) {
+					if (plugin === 'emails') {
+						if (userData['emails'].indexOf(data[k]['address']) === -1) {
+							userData['emails'].push(data[k]['address']);
+						}
+					} else {
 						userData[plugin].push(data[k]);
 					}
-
-					//console.log(data[k])
 				}
 			} else {
-				userData[plugin] = data;
+				userData[plugin] = [];
 			} 
+			
 			userData.toStore -= 1;
 
 			if (userData.toStore === 0) {
-				console.log(userData);
+				console.log('Finished scraping ' + userData.site + '! Results:\n\n', userData, '\n\n');
 			}
 		}
 	} else {
@@ -67,6 +69,7 @@ function recursivelyCheckForLinks (siteMap, userData, link) {
 	}
 
 	//console.log('Found ' + link + '...');
+	userData.toStore += 1;
 
 	request(link, function(error, result, body) {
 		var $ = cheerio.load(body);
