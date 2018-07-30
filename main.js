@@ -193,7 +193,7 @@ var userData = {
 	links: [],
 	emails: [],
 	places: [],
-	phones: [],
+	betterPhones: [],
 	socials: []
 };
 
