@@ -90,7 +90,7 @@ function getAndStoreData (userData, body, link) {
  * @param <string> key - Key to look for in the object
  * @param <object> haystack - Object to look in
  */
-contains = function (key, haystack) {
+function contains (key, haystack) {
 	return !(Object.keys(haystack).indexOf(key) === -1);
 }
 
@@ -142,7 +142,7 @@ function recursivelyCheckForLinks (siteMap, userData, link) {
  */
 function addToSiteMap (siteMap, userData, link) {
 	/*
-	 * if first char is '/', link should be to another page
+	 * if first char is '/', link is likely to another page
 	 *   on the current site (not anchors, external links, etc.)
 	 */
 	if (link.length > 1 && link.substr(0, 1) === '/') {
