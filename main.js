@@ -33,26 +33,56 @@ function getAndStoreData (userData, body, link) {
 			
 			userData.toStore -= 1;
 
+			/* Once we've stored all the data we needed to, can output it */
 			if (userData.toStore === 0) {
 				console.log('Finished scraping ' + userData.site + '! Results:\n\n');
 				
 
 				var resultsOutStr = 'Emails:\n';
-				for (e in userData['emails']) {
-					resultsOutStr += '\t' + userData['emails'][e] + '\n';
+				for (var e in userData.emails) {
+					resultsOutStr += '\t' + userData.emails[e] + '\n';
 				}
 				resultsOutStr += 'Phones:\n';
-				for (e in userData['betterPhones']) {
-					resultsOutStr += '\t' + userData['betterPhones'][e] + '\n';
+				for (var p in userData.betterPhones) {
+					resultsOutStr += '\t' + userData.betterPhones[p] + '\n';
 				}
 				resultsOutStr += 'Links:\n';
-				for (e in userData['links']) {
-					resultsOutStr += '\t' + userData['links'][e] + '\n';
+				mainLinkLoop:
+				for (var l in userData['links']) {
+					if (userData['links'][l].substr(0, 1) === '/') {
+						delete userData['links'][l];
+					} else {
+						var socials = ['facebook', 'plus.google', 'twitter', 'linkedin', 'youtube'];
+						var socialsRegEx = new RegExp(socials.join('|'));
+
+						for (s2 in socials) {
+							if (socialsRegEx.test(userData['links'][l])) {
+								userData.socials.push(userData['links'][l]);
+								delete userData['links'][l];
+								continue mainLinkLoop;
+							}
+						}
+
+						resultsOutStr += '\t' + userData['links'][l] + '\n';
+					}
+				}
+				resultsOutStr += 'Socials:\n';
+				for (var s in userData.socials) {
+					resultsOutStr += '\t' + userData.socials[s] + '\n';
 				}
 				resultsOutStr += 'Places:\n';
-				for (e in userData['places']) {
-					resultsOutStr += '\t' + userData['places'][e] + '\n';
+				for (var pl in userData.places) {
+					resultsOutStr += '\t' + userData.places[pl] + '\n';
 				}
+				if (userData.places.length === 0) {
+					resultsOutStr += '\tNo places...';
+				}
+				/*
+				resultsOutStr += 'Pricing Plans:\n';
+				for (e in userData['pricingPlans']) {
+					resultsOutStr += '\t' + userData['pricingPlans'][e] + '\n';
+				}
+				*/
 
 				console.log(resultsOutStr);
 
@@ -106,6 +136,17 @@ function recursivelyCheckForLinks (siteMap, userData, link) {
 			}
 		});
 
+		/*
+		console.log(link);
+		$('ul.pricing-plan').each(function(e) {
+			console.log('foundOne');
+			var pricingPlanData = {
+				price: $(this).find('pricing-plan-price')
+			};
+			userData.pricingPlans.push(pricingPlanData);
+		});
+		*/
+
 		siteMap[link] = body;
 		getAndStoreData(userData, siteMap[link], origLink);
 	});
@@ -125,6 +166,11 @@ function addToSiteMap (siteMap, userData, link) {
 		siteMap[userData.site + link] = '';
 		
 		recursivelyCheckForLinks(siteMap, userData, link);
+	} else {
+		/* Add external links to userData.links */
+		if (link.substr(0, 1) !== '#' && link.search('javascript:') === -1 && link.search('tel:') === -1) {
+			userData['links'].push(link);
+		}
 	}
 
 	return siteMap;
@@ -159,7 +205,13 @@ knwlInst.register('betterPhones', require('./lib/knwlPhones.js'));
 
 var args = process.argv;
 var userData = {
-	toStore: 0
+	toStore: 0,
+	pricingPlans: [],
+	links: [],
+	emails: [],
+	places: [],
+	phones: [],
+	socials: []
 };
 
 if (args.length > 2) {
