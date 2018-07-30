@@ -15,26 +15,21 @@ function getAndStoreData (userData, body, link) {
 			var plugin = knwlPlugins[p];
 			var data = knwlInst.get(plugin);
 
-			if (userData[plugin]) {
-				for (k in data) {
-					if (plugin === 'emails') {
-						if (userData['emails'].indexOf(data[k]['address']) === -1) {
-							userData['emails'].push(data[k]['address']);
-						}
-					} else {
-						if (userData[plugin].indexOf(data[k]) === -1) {
-							userData[plugin].push(data[k]);
-						}
-						//userData[plugin].push(data[k]);
+			for (k in data) {
+				if (plugin === 'emails') {
+					if (userData['emails'].indexOf(data[k]['address']) === -1) {
+						userData['emails'].push(data[k]['address']);
+					}
+				} else {
+					if (userData[plugin].indexOf(data[k]) === -1) {
+						userData[plugin].push(data[k]);
 					}
 				}
-			} else {
-				userData[plugin] = [];
-			} 
+			}
 			
 			userData.toStore -= 1;
 
-			/* Once we've stored all the data we needed to, can output it */
+			/* Once we've stored all the data we needed to, we can output it */
 			if (userData.toStore === 0) {
 				console.log('Finished scraping ' + userData.site + '! Results:\n\n');
 				
@@ -71,22 +66,8 @@ function getAndStoreData (userData, body, link) {
 				for (var s in userData.socials) {
 					resultsOutStr += '\t' + userData.socials[s] + '\n';
 				}
-				/*
-				resultsOutStr += 'Places:\n';
-				for (var pl in userData.places) {
-					resultsOutStr += '\t' + userData.places[pl] + '\n';
-				}
-				if (userData.places.length === 0) {
-					resultsOutStr += '\tNo places...';
-				}
-				*/
-				/*
-				resultsOutStr += 'Pricing Plans:\n';
-				for (e in userData['pricingPlans']) {
-					resultsOutStr += '\t' + userData['pricingPlans'][e] + '\n';
-				}
-				*/
 
+				/* Final output of str */
 				console.log(resultsOutStr);
 
 			}
@@ -125,7 +106,6 @@ function recursivelyCheckForLinks (siteMap, userData, link) {
 		link = userData.site + link;
 	}
 
-	//console.log('Found ' + link + '...');
 	userData.toStore += 1;
 
 	request(link, function(error, result, body) {
