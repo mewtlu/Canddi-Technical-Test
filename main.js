@@ -9,7 +9,8 @@ function getAndStoreData (userData, body, link) {
 		/* if we already have the page body */
 		knwlInst.init(body);
 
-		var knwlPlugins = ['betterPhones', 'emails', 'links', 'places'];
+		//var knwlPlugins = ['betterPhones', 'emails', 'places'];
+		var knwlPlugins = ['betterPhones', 'emails'];
 		for (p in knwlPlugins) {
 			var plugin = knwlPlugins[p];
 			var data = knwlInst.get(plugin);
@@ -70,6 +71,7 @@ function getAndStoreData (userData, body, link) {
 				for (var s in userData.socials) {
 					resultsOutStr += '\t' + userData.socials[s] + '\n';
 				}
+				/*
 				resultsOutStr += 'Places:\n';
 				for (var pl in userData.places) {
 					resultsOutStr += '\t' + userData.places[pl] + '\n';
@@ -77,6 +79,7 @@ function getAndStoreData (userData, body, link) {
 				if (userData.places.length === 0) {
 					resultsOutStr += '\tNo places...';
 				}
+				*/
 				/*
 				resultsOutStr += 'Pricing Plans:\n';
 				for (e in userData['pricingPlans']) {
